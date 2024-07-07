@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="kelompok4">
+    <meta name="description" content="Sebuah Website untuk Melihat Track Record Perkembangan Software untuk dijadikan Penelitian">
+    <meta name="keywords" content="website, web, django, bootstrap, css, scss, sass, webpro, kelompok4">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+    <title>Sistem Implementasi</title>
+    <link rel="icon" href="https://media.istockphoto.com/id/1352367851/vector/dx-vector-icon-illustration.jpg?s=612x612&w=0&k=20&c=_m2prNR3aJFKZ-AH5kVKMr9RGmBnKoWU6J-ExRMBaC0=" type="image/x-icon">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&subset=devanagari,latin-ext');
+        
+        .navbar {
+          background-color: rgba(255, 255, 255, 0.25);
+          height: 80px;
+          margin: 20px;
+          border-radius: 16px;
+          padding: 0.5rem;
+          backdrop-filter: blur(1px);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand {
+            font-weight: 500;
+            color: #8000FF;
+            font-size: 24px;
+            transition: 0.3s color;
+        }
+        .logout-button {
+            background-color: #9A2EFE;
+            color: #fff;
+            font-size: 14px;
+            padding: 8px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: 0.3s background-color;
+        }
+        .logout-button:hover {
+            background-color: #9F81F7;
+        }
+        .navbar-toggler {
+            border: none;
+            font-size: 1.25rem;
+        }
+        .navbar-toggler:focus, .btn-close:focus {
+            box-shadow: none;
+            outline: none;
+        }
+        .nav-link {
+            color: #fff;
+            font-weight: 500;
+            position: relative;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #777888;
+        }
+
+        @media (min-width: 991px){
+            .nav-link::before {
+                content: "";
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 0;
+                height: 2px;
+                background-color: #8000FF;
+                visibility: hidden;
+                transition: 0.3s ease-in-out;
+            }
+            .nav-link:hover::before, .nav-link.active::before {
+                width: 100%;
+                visibility: visible;
+            }
+        }
+        .konten-section {
+            background: url(https://img.freepik.com/free-vector/3d-style-black-background-with-paper-layer_206725-669.jpg) no-repeat center;
+            background-size: cover;
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .konten-section::before {
+            background-color: rgba(0, 0, 0, 0.6);
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+        .kontainer {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .bi {
+            margin-right: 5px;
+        }
+        .bttn1 {
+            background-color: #8000FF;
+            color: #fff;
+        }
+        .bttn1:hover {
+            background-color: #9F81F7;
+        }
+        .bttn2 {
+            background-color: #DF0101;
+            color: #fff;
+        }
+        .bttn2:hover {
+            background-color: #FE2E2E;
+        }
+        .bttn3 {
+            background-color: #86E9FF;
+            color: #555555;
+        }
+        .bttn3:hover {
+            background-color: #07D2FF;
+        }
+        .bttn4 {
+            background-color: #7AFF97;
+            color: #555555;
+        }
+        .bttn4:hover {
+            background-color: #36FF62;
+        }
+        .bttn5 {
+            background-color: #FFC178;
+            color: #555555;
+        }
+        .bttn5:hover {
+            background-color: #FF9E2C;
+        }
+        .bttn6 {
+            background-color: #FF6969;
+            color: #555555;
+        }
+        .bttn6:hover {
+            background-color: #FF2F2F;
+        }
+        .center-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            flex-direction: column;
+        }
+        .space {
+            margin-bottom: -70px;
+        }
+        .jarak {
+            margin-bottom: -50px;   
+        }
+        #projectContent table,
+        #transactiondataContent table,
+        #environtmentdataContent table {
+            color: black; /* Ubah warna font tabel di dalam projectContent menjadi hitam */
+        }
+
+        #projectContent table thead,
+        #transactiondataContent table thead, 
+        #environtmentdataContent table thead{
+            background-color: #f8f9fa; /* Warna latar belakang untuk header tabel */
+        }
+
+        #projectContent table tbody tr:nth-child(even),
+        #transactiondataContent table tbody tr:nth-child(even), 
+        #environtmentdataContent table tbody tr:nth-child(even) {
+            background-color: #f2f2f2; /* Warna latar belakang untuk baris genap */
+        }
+
+        #projectContent table tbody tr:nth-child(odd),
+        #transactiondataContent table tbody tr:nth-child(odd),
+        #environtmentdataContent table tbody tr:nth-child(odd) {
+            background-color: #ffffff; /* Warna latar belakang untuk baris ganjil */
+        }
+
+        #projectContent table th,
+        #projectContent table td,
+        #transactiondataContent table th,
+        #transactiondataContent table td, 
+        #environtmentdataContent table th,
+        #environtmentdataContent table td {
+            padding: 10px;
+            border: 1px solid #dee2e6;
+        }
+        .Koma {
+            margin-bottom: 70px;
+        }
+
+        #environtmentdataContent .table-container,
+        #transactiondataContent .table-container {
+            max-height: 400px; /* Ubah tinggi sesuai kebutuhan */
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigasi -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container" style="font-family: 'Kalam', cursive;">
+          <i><a class="navbar-brand me-auto" href="{% url 'home' %}">Sistem Implementasi</a></i>
+          <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+              <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
+                <li class="nav-item">
+                  <a class="nav-link mx-lg-2 active" id="nav-home" data-target="#homeContent" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link mx-lg-2 active" id="nav-project" data-target="#projectContent" href="#">Project</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link mx-lg-2" id="nav-transactiondata" data-target="#transactiondataContent" href="#">Transaction Data</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link mx-lg-2" id="nav-environtmentdata" data-target="#environtmentdataContent" href="#">Environtment Data</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link mx-lg-2" id="nav-performancemonitoring" data-target="#performancemonitoringContent" href="#">Performance Monitoring</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <a href="" class="logout-button">Keamanan</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+    </nav>
+    
+    <!-- Gunta Ganti Kontent -->
+    <section class="konten-section">
+      <div class="kontainer">
+        <div id="homeContent" style="font-family: 'Kavoon', cursive;">
+            <div class="row">
+              <div class="col-12 text-center">
+                <h1 style="color: #8000FF;">Sistem Implementasi</h1>
+              </div>
+            </div>
+            <div class="row mt-5 space">
+              <div class="col-lg-6 col-md-12 mb-4">
+                <div class="card bg-transparent border-0 text-white h-100">
+                  <div class="card-body">
+                    <h3 class="card-title text-center" style="color: #8000FF;">Selamat Datang Di Sistem Implementasi</h3>
+                    <p class="card-text">Sistem Implementasi Membantu Anda Dalam Memonitoring Perkembangan Project Sistem Cerdas Anda. Anda Dapat Menganalisa Dengan Membandingkan Project Sistem Cerdas Yang Ada Di Sini.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-12 mb-4">
+                <div class="card bg-transparent border-0 text-white h-100">
+                  <div class="card-body">
+                    <h3 class="card-title text-center" style="color: #8000FF;">Cara Menggunakan Aplikasi Sistem Implementasi</h3>
+                    <ul class="list-unstyled">
+                      <li class="mb-2"><strong>Project:</strong> Untuk melihat macam-macam Project yang telah dibuat atau di upload di sini.</li>
+                      <li class="mb-2"><strong>Transaction Data:</strong> Untuk membuat Project baru, serta menentukan anggota yang akan mengerjakan Project tersebut.</li>
+                      <li class="mb-2"><strong>Environment Data:</strong> Untuk melapor progress dari setiap anggota agar Project dapat dikembangkan secepat dan sebaik mungkin.</li>
+                      <li class="mb-2"><strong>Performance Monitoring:</strong> Untuk melihat progress secara keseluruhan dari setiap anggota dalam mengembangkan Project.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-5 jarak">
+              <div class="col-12 mb-4">
+                <div class="card bg-transparent border-0 text-white h-100">
+                  <div class="card-body">
+                    <h3 class="card-title text-center" style="color: #8000FF;">Tentang Sistem Implementasi ?</h3>
+                    <p class="card-text">Sistem Implementasi sudah teruji dari segi desain ui, database, dan controller. Sistem Implementasi telah di anggap, responsif dan efisien, sehingga User dapat mudah menggunakan aplikasi ini dalam memahami penggunaannya.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-5">
+              <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card bg-transparent border-0 text-white h-100">
+                  <div class="card-body">
+                    <h4 class="card-title text-center" style="color: #8000FF;">Kontak Kami</h4>
+                    <ul class="list-unstyled">
+                      <li>081803492751</li>
+                      <li>08177062422</li>
+                      <li>082225563707</li>
+                      <li>081319776962</li>
+                      <li>081249409649</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card bg-transparent border-0 text-white h-100">
+                  <div class="card-body">
+                    <h4 class="card-title text-center" style="color: #8000FF;">Social Media</h4>
+                    <ul class="list-unstyled">
+                      <li>e_navarro_hk</li>
+                      <li>ehzaifan</li>
+                      <li>rairidan</li>
+                      <li>everden</li>
+                      <li>rodrick</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-12 mb-4">
+                <div class="card bg-transparent border-0 text-white h-100">
+                  <div class="card-body">
+                    <h4 class="card-title text-center" style="color: #8000FF;">Kelompok 4</h4>
+                    <ul class="list-unstyled">
+                      <li>Naufal Fawaz</li>
+                      <li>Mohamad Fadilah Ariputra</li>
+                      <li>Muhamad Zidnan Fadilah</li>
+                      <li>Evanda Hangganjii</li>
+                      <li>Rodrick Kiddies</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div id="projectContent" style="display: none; font-family: 'Kavoon', cursive;">
+            <div class="container py-3 h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <h4 class="text-center my-5">Hasil Pencarian</h4>
+                    <form class="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2" id="searchForm" method="get" action="{% url 'search' %}">
+                        <div class="col-12">
+                            <div data-mdb-input-init class="form-outline">
+                                <label for="inputSearch" class="form-label">Cari Disini</label>
+                                <input type="text" class="form-control" id="inputSearch" name="q" placeholder="Nama Sistem Cerdas" style="width: 500px;">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn bttn1" style="margin-top: 32px;"><i class="bi bi-search"></i>Cari</button>
+                        </div>
+                    </form>
+                    <table class="table mb-4" id="projectTable">
+                        <thead>
+                            <tr>
+                                <th>Nama Sistem Cerdas</th>
+                                <th>Format File Models</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for local_project in local_projects %}
+                            <tr>
+                                <td>{{ local_project.nama_sistem_cerdas }}</td>
+                                <td>{{ local_project.file_format }}</td>
+                                <td><a href="{% url 'download_file' local_project.id %}" target="_blank" class="btn bttn4">Download</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>        
+        <div id="transactiondataContent" style="display: none; font-family: 'Kavoon', cursive;">
+            <div class="container mt-5">
+                <h4 class="Koma"><b>Upload File Models Project Yang Anda Download Disini Untuk Deploy</b></h4>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form_pickle.as_p }}
+                            <button type="submit" name="upload_pickle" class="btn bttn1 mt-2">Upload Pickle</button>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form_csv.as_p }}
+                            <button type="submit" name="upload_csv" class="btn bttn1 mt-2">Upload CSV</button>
+                        </form>
+                    </div>
+                </div>
+                <h1>List of Pickle Files</h1>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>File Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pickle in pickles %}
+                            <tr>
+                                <td>{{ pickle.project_name }}</td>
+                                <td>{{ pickle.file.name }}</td>
+                                <td><a href="?load_pickle={{ pickle.pk }}" class="btn btn-sm btn-primary">Load</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <h1>List of CSV Files</h1>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>File Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for csv_file in csv_files %}
+                            <tr>
+                                <td>{{ csv_file.project_name }}</td>
+                                <td>{{ csv_file.file.name }}</td>
+                                <td><a href="?load_csv={{ csv_file.pk }}" class="btn btn-sm btn-primary">Deploy</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="environtmentdataContent" style="display: none;">
+            <div class="container mt-5">
+                {% if accuracy %}
+                <h4><b>Lihat Hasil Deploy Models Nya Disini</b></h4>
+                <h1>Pickle File Data</h1>
+                <p>Accuracy: {{ accuracy }}</p>
+                <div class="table-container">
+                    <h2>Test Results</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Index</th>
+                                <th>True Label</th>
+                                <th>Predicted Label</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for true, pred in test_results %}
+                            <tr>
+                                <td>{{ forloop.counter0 }}</td>
+                                <td>{{ true }}</td>
+                                <td>{{ pred }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+                {% if csv_data %}
+                <div class="table-container">
+                    <h1>CSV File Data</h1>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                {% for header in csv_data.0 %}
+                                    <th>{{ header }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in csv_data.1 %}
+                                <tr>
+                                    {% for item in row %}
+                                        <td>{{ item }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div id="performancemonitoringContent" style="display: none;">
+            <div class="container mt-5">
+                <h4><b>Update Status Project Anda Disini</b></h4>
+                <button id="UpdateStatusButton" class="btn bttn1">Update Status</button>
+            </div>
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                <div id="statusToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <strong class="me-auto">Status Di Update</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        Deploy Telah Selesai
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </section>
+    <script>
+        $(document).ready(function() {
+            $(".nav-link").click(function(event) {
+                event.preventDefault();
+                $(".nav-link").removeClass("active");
+                $(this).addClass("active");
+                
+                var target = $(this).data("target");
+                $(".konten-section > .kontainer > div").hide();
+                $(target).show();
+            });
+
+            $("#UpdateStatusButton").click(function() {
+                var toast = new bootstrap.Toast(document.getElementById('statusToast'));
+                toast.show();
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+</body>
+</html>
